@@ -1,9 +1,9 @@
 # docker-scripts
 
-#Requirements
+# Requirements
 docker, ansible
 
-#how to use
+# how to use
 ```bash
 ./scripts.sh --option1 option2
 ```
@@ -11,20 +11,20 @@ docker, ansible
 ```bash
 ./scripts.sh --create 10
 ```
-#get infos ( IP and Names )
+# get infos ( IP and Names )
 ```bash
 ./scripts.sh --infos
 ```
-#restart containers
+# restart containers
 ```bash
 ./scripts.sh --start
 ```
 
-#drop  containers
+# drop  containers
 ```bash
 ./scripts.sh --start
 ```
-
+## all options
         --create : default 2 containers will be created
 
 	--drop : delete all containers created by $USER
