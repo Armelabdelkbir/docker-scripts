@@ -24,6 +24,15 @@ max=$(($idmax + $nb_machine ))
   for i in $(seq $min $max );do
     docker run -tid --name $USER-alpine-$i alpine:3.7
     echo "j'ai créer $USER-alpine-$i"
+    docker run -tid --cap-add NET_ADMIN --cap-add SYS_ADMIN --publish-all=true -v /srv/data:/srv/html -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name $USER-debian-$i -h $USER-debian-$i  armelab/debian-systemd:V1                       
+    docker exec -ti $USER-debian-$i /bin/sh -c "useradd -m -p sa3tHJ3/KuYvI $USER"
+	docker exec -ti $USER-debian-$i /bin/sh -c "mkdir  ${HOME}/.ssh && chmod 700 ${HOME}/.ssh && chown $USER:$USER $HOME/.ssh"
+    docker cp $HOME/.ssh/id_rsa.pub $USER-debian-$i:$HOME/.ssh/authorized_keys
+    docker exec -ti $USER-debian-$i /bin/sh -c "chmod 600 ${HOME}/.ssh/authorized_keys && chown $USER:$USER $HOME/.ssh/authorized_keys"
+	docker exec -ti $USER-debian-$i /bin/sh -c "echo '$USER   ALL=(ALL) NOPASSWD: ALL'>>/etc/sudoers"
+	docker exec -ti $USER-debian-$i /bin/sh -c "service ssh start"
+	echo "Conteneur $USER-debian-$i créé"
+  
   done
 
 #check drop option
@@ -56,6 +65,8 @@ elif [ "$1" == "--infos" ];then
 echo "**"
   echo "our option infos"
 echo "**"
+
+# container informations 
 
 for c in $(docker ps -a | grep $USER-alpine | awk '{print $1}' );do
 docker inspect -f '    {{.Name}} - {{.NetworkSettings.IPAddress}}' $c
